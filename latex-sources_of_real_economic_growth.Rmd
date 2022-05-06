@@ -1,0 +1,54 @@
+---
+title: "Sources of Real Economic Growth"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(gt)
+library(tidyverse)
+library(readxl)
+```
+
+
+This is adapted from a [LinkedIn Post]( https://www.linkedin.com/feed/update/urn:li:activity:6916876075809558528/).
+
+```{r echo=FALSE}
+gt_tbl <-
+  readxl::read_excel("sources_of_real_economic_growth.xlsx", sheet = "data") %>%
+  dplyr::select(Years, Output, LaborC, CapitalC, TFP) %>%
+  gt() %>%
+  cols_align(align = c("center"), columns = everything()) %>%
+  cols_label(
+    Years = "Periods",
+    Output = "Real GDP",
+    LaborC = md("Labor Input • (*a*)"),
+    CapitalC = md("Capital Input • (1 - *a*)"),
+    TFP = "Total Factor Productivity"
+  ) %>%
+  cols_width(CapitalC ~ pct(20)) %>%
+  tab_options(
+    table.width = pct(80),
+    table.font.size = "smaller",
+    column_labels.font.size = "small"
+  ) %>%
+  tab_header(
+    title = "Source of Real Economic Growth",
+    subtitle = "Private Non-Farm Business"
+  ) %>%
+  tab_spanner(
+    label = html("= Labor Input* + Capital Input* + TFP"),
+    columns = matches("LaborC|CapitalC|TFP")
+  ) %>%
+  tab_source_note(md("\\* Contribution points towards output growth.")) %>%
+  tab_source_note(md("Here, *a* is the average labor cost share.")) %>%
+  tab_source_note(md("Source: Bureau of Labor Statistics.")) %>%
+  tab_footnote(
+    footnote = "Excludes Nonprofits, Private Households, Owner-occupied Housing,
+    Government and Government Enterprise.",
+    locations = cells_column_labels(columns = Output)
+  ) %>%
+  tab_options(source_notes.multiline = FALSE)
+
+gt_tbl
+```
