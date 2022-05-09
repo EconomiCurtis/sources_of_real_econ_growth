@@ -82,7 +82,7 @@ In the code chunk above we created out `gt` table. Suppose we want to export thi
 
 The [`as_latex`](https://gt.rstudio.com/reference/as_latex.html) function takes a `gt()` table object as input, and returns a `knit_asis` object which an R Markdown document, which makes it easy to include in R Markdown documents that are knited to PDF.
 
-If you'd just like the LaTeX code, for example to paste that into a separate LaTeX document, use `cat()`, see below. Use `as.character()` instead of `cat` if you'd like this in a single line. 
+If you'd just like the LaTeX code, for example to paste that into a separate LaTeX document, use `cat()`, see below. Use `as.character()` instead of `cat` if you'd like this LaTeX table code in a single line. 
 
 ```{r comment = ""}
 
