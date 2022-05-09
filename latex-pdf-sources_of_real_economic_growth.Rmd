@@ -1,12 +1,12 @@
 ---
-title: "Sources of Real Economic Growth - HTML"
-output: html_document
+title: "Sources of Real Economic Growth - PDF and LaTeX"
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(tidyverse)
 library(gt)
+library(tidyverse)
 library(readxl)
 ```
 
@@ -14,15 +14,19 @@ See discussion on the [RStudio Community Table Gallery](https://community.rstudi
 
 This is adapted from this [LinkedIn Post]( https://www.linkedin.com/feed/update/urn:li:activity:6916876075809558528/), by [Mike Jadoo](https://www.linkedin.com/in/mike-jadoo/).
 
-```{r echo=FALSE}
+
+# Table - Sources of Real Economic Growth
+
+```{r}
+
 gt_tbl <-
   readxl::read_excel("sources_of_real_economic_growth.xlsx", sheet = "data") %>%
   dplyr::select(Years, Output, LaborC, CapitalC, TFP) %>%
   gt() %>%
-  
+
   #center align columns
   cols_align(align = c("center"), columns = everything()) %>%
-  
+
   # Add column labels
   cols_label(
     Years = "Periods",
@@ -31,32 +35,32 @@ gt_tbl <-
     CapitalC = md("Capital Input • (1 - *a*)"),
     TFP = "Total Factor Productivity"
   ) %>%
-  
+
   # resize Capital Input column
   cols_width(CapitalC ~ pct(20)) %>%
-  
+
   # resize font size.
   tab_options(
     table.width = pct(80),
     table.font.size = "smaller",
     column_labels.font.size = "small"
   ) %>%
-  
+
   # Add table title and subtitle
   tab_header(
     title = "Source of Real Economic Growth",
     subtitle = "Private Non-Farm Business"
   ) %>%
-  
+
   # Add and title a column label spanner
   tab_spanner(
     label = html("= Labor Input* + Capital Input* + TFP"),
     columns = matches("LaborC|CapitalC|TFP")
   ) %>%
-  
+
   # Add and format footnotes
-  # Note the md() function to handle markdown, will convert this to HTML, 
-  # LaTeX or other, defined by yaml output parameter.  
+  # Note the md() function to handle markdown, will convert this to HTML,
+  # LaTeX or other, defined by yaml output parameter.
   tab_source_note(md("\\* Contribution points towards output growth.")) %>%
   tab_source_note(md("Here, *a* is the average labor cost share.")) %>%
   tab_source_note(md("Source: Bureau of Labor Statistics.")) %>%
@@ -68,4 +72,20 @@ gt_tbl <-
   tab_options(source_notes.multiline = FALSE)
 
 gt_tbl
+
+```
+
+
+## LaTeX Output
+
+In the code chunk above we created out `gt` table. Suppose we want to export this into a format we can put into a LaTeX document, how would we approach that? 
+
+The [`as_latex`](https://gt.rstudio.com/reference/as_latex.html) function takes a `gt()` table object as input, and returns a `knit_asis` object which an R Markdown document, which makes it easy to include in R Markdown documents that are knited to PDF.
+
+If you'd just like the LaTeX code, for example to paste that into a separate LaTeX document, use `cat()`, see below. Use `as.character()` instead of `cat` if you'd like this in a single line. 
+
+```{r comment = ""}
+
+gt_tbl %>% as_latex() %>% cat() 
+
 ```
